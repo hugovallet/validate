@@ -174,13 +174,13 @@ module.exports = function(app, express) {
 
 
 
-	apiRouter.route('/challenges')
+	apiRouter.route('/Users/:user_id/challenges')
 		.get(function(req, res) {
-
-			Challenges.find({}, function(err, challenges) {
+			var id = req.params.user_id;
+			Challenges.find({"proprietary_user_id":id}, function(err, challenges) {                     //POUR LE MOMENT, NE RETPOURNE QU'UN USER SPECIFIQUE
 				if (err) res.send(err);
 
-				// return the users
+				//return matching challenges
 				res.json(challenges);
 			});
 		});

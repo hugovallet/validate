@@ -30,6 +30,11 @@ angular.module('userService', [])
 		return $http.delete('/api/users/' + id);
 	};
 
+	// get the challenges for the currrent user XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	userFactory.get_challenges = function(id){
+		return $http.get('/api/users/' + id + '/challenges/');
+	}
+
 	// return our entire userFactory object
 	return userFactory;
 

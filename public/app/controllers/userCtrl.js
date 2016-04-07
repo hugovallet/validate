@@ -8,7 +8,7 @@ angular.module('userCtrl', ['userService'])
 	vm.processing = true;
 
 	// grab all the users at page load
-	User.all()
+	User.get_challenges()
 		.success(function(data) {
 
 			// when all the users come back, remove the processing variable
