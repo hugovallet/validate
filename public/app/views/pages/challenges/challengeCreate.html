@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://code.jquery.com/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+	<div class="page-header">
+		<h1 ng-if="user.type == 'create'">Create User</h1>
+		<h1 ng-if="user.type == 'edit'">Edit User</h1>
+	</div>
+
+	<form class="form-horizontal" ng-submit="user.saveUser()">
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Title</label>
+		<div class="col-sm-6">
+			<input type="text" class="form-control" ng-model="user.userData.name">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Amount</label>
+		<div class="col-sm-6">
+			<input type="text" class="form-control" ng-model="user.userData.username">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Due date</label>
+		<div class="col-sm-6">
+			<input type="text" class="form-control" ng-model="user.userData.password">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Theme</label>
+		<div class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Theme of your challenge<span class="caret"></span></a>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				<li><a href="#">Health</a></li>
+				<li><a href="#">Productivity</a></li>
+				<li><a href="#">Money</a></li>
+				<li><a href="#">Other</a></li>
+				<li><a href="#">Bullshit</a></li>
+				<li class="divider"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-star"></span> Other</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-6">
+			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="user.type == 'create'">Create User</button>
+			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="user.type == 'edit'">Update User</button>
+		</div>
+	</div>
+
+	</form>
+
+	<div class="row show-hide-message" ng-show="user.message">
+	<div class="col-sm-6 col-sm-offset-2">
+		
+		<div class="alert alert-info">
+			{{ user.message }}
+		</div>
+
+	</div>
+	</div>
+
+
+</body>
+

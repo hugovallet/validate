@@ -29,9 +29,9 @@ angular.module('mainCtrl', [])
 			.success(function(data) {
 				vm.processing = false;			
 
-				// if a user successfully logs in, redirect to users page
+				// if a user successfully logs in, redirect to challenges page
 				if (data.success)			
-					$location.path('/users');
+					$location.path('/challenges');
 				else 
 					vm.error = data.message;
 				
