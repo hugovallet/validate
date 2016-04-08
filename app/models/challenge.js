@@ -1,7 +1,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-// user schema 
+// challenge schema 
 var ChallengeSchema   = new Schema({
 	title: {type: String, required: true},
 	amount: { type: Number, required: true},

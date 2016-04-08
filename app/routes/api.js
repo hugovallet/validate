@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser'); 	// get body-parser
 var User       = require('../models/user');
-var Challenges = require('../models/challenge')
+var Challenges = require('../models/challenge');
+var Tasks      = require('../models/task');
 var jwt        = require('jsonwebtoken');
 var config     = require('../../config');
 
@@ -180,7 +181,7 @@ module.exports = function(app, express) {
 		//cette fonction va chercher l'identité de l'utilisateur stockée dans son token puis l'utilise pour lui créer un nouveau challenge
 
 		.post(function(req,res){
-			var challenge = new Challenges()
+			var challenge = new Challenges();
 			var user_id = req.decoded._id;
 			console.log('User : ' + user_id);
 
@@ -273,6 +274,50 @@ module.exports = function(app, express) {
 				res.json({ message: 'Successfully deleted' });
 			});
 		});
+
+	// on routes that end in /challenges/:challenge_id/tasks
+	// --------------------------------------------------------
+	apiRouter.route('/challenges/:challenge_id/tasks')
+
+		.post(function(req,res){
+			var task = new Tasks();
+			console.log('Challenge : ' + challenge_id);
+
+			task.description = req.body.description;
+			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
+			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
+			challenge.proprietary_user_id = user_id;
+
+			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
+			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
+            	var cash = result[0].credit;
+           		console.log('Available user cash : ' + cash);
+            
+				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
+				else{
+					//Sauver le nouveau challenge dans la DB des challenges
+					challenge.save(function(err) {
+						if (err) res.send(err);
+						// return a message
+						res.json({ message: 'Challenge created!' });
+					});
+				}
+			})
+		
+		})
+
+
+		//get all the tasks of one challenge
+		.get(function(req, res) {
+			Tasks.find({"proprietary_challenge_id":challenge_id}, function(err, tasks) {                     
+				if (err) res.send(err);
+
+				//return matching tasks
+				res.json(tasks);
+			});
+		});
+
+
 
 	// on routes that end in /users/:user_id
 	// ----------------------------------------------------
