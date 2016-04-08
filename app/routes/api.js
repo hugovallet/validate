@@ -205,7 +205,7 @@ module.exports = function(app, express) {
 					//enlever des crédits à l'utilisateur concerné
 					var new_credit = cash - challenge.amount;
 					console.log("New value : "+new_credit);
-					User.update({ "_id" : user_id },{ $set: { "credit": new_credit} }, function(err, results) {			        
+					User.update({ "_id" : user_id },{ $set: { "credit": new_credit} }, function(err, results) {       
 					   });
 					});
 				}
@@ -286,7 +286,14 @@ module.exports = function(app, express) {
 
 	// api endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
-		res.send(req.decoded);
+		data = req.decoded;
+		user_id = data._id;
+		
+		User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
+        	var cash = result[0].credit;
+			data["credit"] = cash;
+			res.send(data);
+		});
 	});
 
 	return apiRouter;
