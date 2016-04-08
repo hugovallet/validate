@@ -191,7 +191,7 @@ module.exports = function(app, express) {
 
 			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
 			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
-            	var cash = result[0].credit
+            	var cash = result[0].credit;
            		console.log('Available user cash : ' + cash);
             
 				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
@@ -227,10 +227,52 @@ module.exports = function(app, express) {
 			});
 		});
 
-		
-		
 
+	//on routes that end in /challenges/:challenge_id
+	// --------------------------------------------------------
+	apiRouter.route('/challenges/:challenge_id')
+		// get the challenge with that id
+		.get(function(req, res) {
+			Challenges.findById(req.params.challenge_id, function(err, challenge) {
+				if (err) res.send(err);
 
+				// return that challenge
+				res.json(challenge);
+			});
+		})
+
+		// update the challenge with this id
+		.put(function(req, res) {
+			Challenges.findById(req.params.challenge_id, function(err, challenge) {
+
+				if (err) res.send(err);
+
+				// set the new challenge information if it exists in the request
+				if (req.body.title) challenge.title = req.body.title;
+				if (req.body.amount) challenge.amount = req.body.amount;
+				if (req.body.date) challenge.due_date = req.body.date;
+
+				// save the user
+				challenge.save(function(err) {
+					if (err) res.send(err);
+
+					// return a message
+					res.json({ message: 'Challenge updated!' });
+				});
+
+			});
+		})
+
+		// delete the challenge with this id
+		.delete(function(req, res) {
+			Challenges.remove({
+				_id: req.params.challenge_id
+			}, function(err, challenge) {
+				if (err) res.send(err);
+
+				res.json({ message: 'Successfully deleted' });
+			});
+		});
 
 	// on routes that end in /users/:user_id
 	// ----------------------------------------------------
