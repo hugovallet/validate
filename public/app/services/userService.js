@@ -31,8 +31,8 @@ angular.module('userService', [])
 	};
 
 	// get the challenges for the currrent user XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	userFactory.get_challenges = function(id){
-		return $http.get('/api/users/' + id + '/challenges/');
+	userFactory.get_challenges = function(){
+		return $http.get('/api/challenges');
 	}
 
 	// return our entire userFactory object

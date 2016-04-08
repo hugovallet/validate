@@ -36,7 +36,16 @@ angular.module('app.routes', ['ngRoute'])
 			templateUrl: 'app/views/pages/users/single.html',
 			controller: 'userEditController',
 			controllerAs: 'user'
+		})
+
+		// show all users
+		.when('/challenges', {
+			templateUrl: 'app/views/pages/challenges/all.html',
+			controller: 'challengeController',
+			controllerAs: 'challenge'
+
 		});
+
 
 	$locationProvider.html5Mode(true);
 

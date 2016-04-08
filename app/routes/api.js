@@ -68,6 +68,7 @@ module.exports = function(app, express) {
 	        // if user is found and password is right
 	        // create a token
 	        var token = jwt.sign({
+	        	_id: user._id,                                                   //STOCK l'ID du user dans le token
 	        	name: user.name,
 	        	username: user.username
 	        }, superSecret, {
@@ -143,6 +144,7 @@ module.exports = function(app, express) {
 			user.name = req.body.name;  // set the users name (comes from the request)
 			user.username = req.body.username;  // set the users username (comes from the request)
 			user.password = req.body.password;  // set the users password (comes from the request)
+			user.credit = 50; //POUR CETTE VERSION TEST, CHAQUE NOUVEL UTILISATEUR SE VOIT OFFRIR 50e A LA CREATION DU COMPTE
 
 			user.save(function(err) {
 				if (err) {
@@ -173,17 +175,60 @@ module.exports = function(app, express) {
 	
 
 
+	//ON ROUTES THAT END IN CHALLENGES !
+	apiRouter.route('/challenges')
+		//cette fonction va chercher l'identité de l'utilisateur stockée dans son token puis l'utilise pour lui créer un nouveau challenge
 
-	apiRouter.route('/Users/:user_id/challenges')
+		.post(function(req,res){
+			var challenge = new Challenges()
+			var user_id = req.decoded._id;
+			console.log('User : ' + user_id);
+
+			challenge.title = req.body.title;
+			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
+			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
+			challenge.proprietary_user_id = user_id;
+
+			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
+			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
+            	var cash = result[0].credit
+           		console.log('Available user cash : ' + cash);
+            
+				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
+				else{
+					//Sauver le nouveau challenge dans la DB des challenges
+					challenge.save(function(err) {
+						if (err) res.send(err);
+						// return a message
+						res.json({ message: 'Challenge created!' });
+					
+					//enlever des crédits à l'utilisateur concerné
+					var new_credit = cash - challenge.amount;
+					console.log("New value : "+new_credit);
+					User.update({ "_id" : user_id },{ $set: { "credit": new_credit} }, function(err, results) {			        
+					   });
+					});
+				}
+			})
+		
+		})
+
+
+
+		//cette fonction va chercher l'identité de l'utilisateur stockée dans son token puis l'utilise pour charger les challenges de l'utilisateur
+		//FAUDRA FAIRE UN TRUC ICI POUR CHARGER LES TACHES ASSOCIEES AU CHALLENGE
 		.get(function(req, res) {
-			var id = req.params.user_id;
-			Challenges.find({"proprietary_user_id":id}, function(err, challenges) {                     //POUR LE MOMENT, NE RETPOURNE QU'UN USER SPECIFIQUE
+			var user_id = req.decoded._id;
+			Challenges.find({"proprietary_user_id":user_id}, function(err, challenges) {                     
 				if (err) res.send(err);
 
 				//return matching challenges
 				res.json(challenges);
 			});
 		});
+
+		
+		
 
 
 
@@ -236,14 +281,7 @@ module.exports = function(app, express) {
 
 
 
-	//ROUTES TO CREATE CHALLENGES
-	apiRouter.route('/users/:user_id/challenges')
-		.get(function(req, res) {
-			res.json(Challenges)
-				
-		});
 			
-
 
 
 	// api endpoint to get user information
