@@ -281,35 +281,25 @@ module.exports = function(app, express) {
 
 		.post(function(req,res){
 			var task = new Tasks();
-			console.log('Challenge : ' + challenge_id);
+			console.log('Challenge : ' + req.params.challenge_id);
 
 			task.description = req.body.description;
-			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
-			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
-			challenge.proprietary_user_id = user_id;
+			task.friend = req.body.friend;
+			task.proprietary_challenge_id = req.params.challenge_id;
 
-			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
-			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
-            	var cash = result[0].credit;
-           		console.log('Available user cash : ' + cash);
-            
-				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
-				else{
-					//Sauver le nouveau challenge dans la DB des challenges
-					challenge.save(function(err) {
-						if (err) res.send(err);
-						// return a message
-						res.json({ message: 'Challenge created!' });
-					});
-				}
-			})
+			//Sauver la nouvelle task dans la DB des tasks
+			task.save(function(err) {
+				if (err) res.send(err);
+				// return a message
+				res.json({ message: 'Task created!' });
+			});
 		
 		})
 
 
 		//get all the tasks of one challenge
 		.get(function(req, res) {
-			Tasks.find({"proprietary_challenge_id":challenge_id}, function(err, tasks) {                     
+			Tasks.find({"proprietary_challenge_id":req.params.challenge_id}, function(err, tasks) {                     
 				if (err) res.send(err);
 
 				//return matching tasks
