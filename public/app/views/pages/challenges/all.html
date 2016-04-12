@@ -26,16 +26,16 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="challenge in challenge.challenges">
-			<td>{{ challenge._id }}</td>
-			<td>{{ challenge.proprietary_user_id }}</td>
-			<td>{{ challenge.due_date }}</td>
-			<td>{{ challenge.amount }}</td>
-			<td>{{ challenge.title }}</td>
+		<tr ng-repeat="chal in challenge.challenges">
+			<td>{{ chal._id }}</td>
+			<td>{{ chal.proprietary_user_id }}</td>
+			<td>{{ chal.due_date }}</td>
+			<td>{{ chal.amount }} €</td>
+			<td>{{ chal.title }}</td>
 			<!--CETTE PARTIE DOIT ETRE MODIF POUR CHARGER LES ICONES SUPPRIMER CHALLENGE/VALIDER/ETC-->
 			<td class="col-sm-2">
-				<a ng-href="/users/{{ person._id }}" class="btn btn-danger">Edit</a>
-				<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-primary">Delete</a>
+				<a ng-href="/challenges/{{chal._id }}" class="btn btn-danger">Edit</a>
+				<a href="#" ng-click="challenge.deleteChallenge(chal._id)" class="btn btn-primary">Delete</a>
 			</td>
 		</tr>
 	</tbody>

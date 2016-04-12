@@ -210,6 +210,7 @@ module.exports = function(app, express) {
 					User.update({ "_id" : user_id },{ $set: { "credit": new_credit} }, function(err, results) {       
 					   });
 					});
+
 				}
 			})
 		
@@ -267,13 +268,32 @@ module.exports = function(app, express) {
 
 		// delete the challenge with this id
 		.delete(function(req, res) {
-			Challenges.remove({
-				_id: req.params.challenge_id
-			}, function(err, challenge) {
-				if (err) res.send(err);
+			
 
-				res.json({ message: 'Successfully deleted' });
-			});
+				Challenges.find({"_id":req.params.challenge_id},{"_id":0,"amount":1}, function(err, result1){
+					if (err) res.send(err);
+	            	var amount = result1[0].amount;    
+
+					User.find({"_id":req.decoded._id},{"_id":0,"credit":1}, function(err, result2){
+						if (err) res.send(err);
+			        	var cash = result2[0].credit;
+						var updated_cash = cash + amount;
+						//remettre des crédits à l'utilisateur concerné
+						User.update({ "_id" : req.decoded._id },{ $set: { "credit": updated_cash} }, function(err, results) {  });
+
+						Challenges.remove({	_id: req.params.challenge_id}, function(err, challenge) {
+							if (err) res.send(err);
+							res.json({ message: 'Challenge successfully deleted, credited '+amount+"euros on user "+req.decoded._id });
+						});
+
+					});
+					
+						
+					
+				});
+
+				
+			
 		});
 
 	// on routes that end in /challenges/:challenge_id/tasks

@@ -128,15 +128,15 @@
 	</div>
 			
 		
-			<form class="form-horizontal" ng-submit="challenge.saveChallenge()">
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-xs-6">
-					<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'create'">Let's go !</button>
-					<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'edit'">Update !</button>
-				</div>
-			</div>
+	<form class="form-horizontal" ng-submit="challenge.saveChallenge()">
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-xs-6">
+			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'create'">Let's go !</button>
+			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'edit'">Update !</button>
+		</div>
+	</div>
 
-			</form>
+	</form>
 	
 
 	<div class="row show-hide-message" ng-show="challenge.message">

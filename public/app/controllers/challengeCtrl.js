@@ -19,6 +19,22 @@ angular.module('challengeCtrl', ['challengeService'])
 			// bind the challenges that come back to vm.challenges
 			vm.challenges = data;
 		});
+	// function to delete a user
+	
+	vm.deleteChallenge = function(id) {
+		vm.processing = true;
+
+		Challenge.delete(id)
+			.success(function(data) {
+
+				Challenge.all()
+					.success(function(data) {
+						vm.processing = false;
+						vm.challenges = data;
+					});
+
+			});
+	};	
 
 })	
 
