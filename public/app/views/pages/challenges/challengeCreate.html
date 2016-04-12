@@ -1,69 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<script src="https://code.jquery.com/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
 </head>
+
 <body>
 	<div class="page-header">
-		<h1 ng-if="user.type == 'create'">Create User</h1>
-		<h1 ng-if="user.type == 'edit'">Edit User</h1>
+		<h1 ng-if="challenge.type == 'create'">Create Challenge !</h1>
+		<h1 ng-if="challenge.type == 'edit'">Edit Challenge</h1>
 	</div>
 
-	<form class="form-horizontal" ng-submit="user.saveUser()">
+	<!-- <div class="container">
+	<div class="row">
+        <div class="control-group" id="fields">
+            
+            <div class="controls"> 
+                <form role="form" autocomplete="off">
+                	<label class="col-sm-2 control-label" for="field1">Tasks</label>
+                    <div class="entry input-group col-xs-3">
+                        <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
+                    	<span class="input-group-btn">
+                            <button class="btn btn-success btn-add" type="button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>       
+            </div>
+        </div>
+	</div>
+	</div> -->
 
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Title</label>
-		<div class="col-sm-6">
-			<input type="text" class="form-control" ng-model="user.userData.name">
+	<div class="panel panel-default">
+		<div class="panel-heading">Set the parameters of the challenge !</div>
+		<div class="panel-body">
+			<form class="form-horizontal" ng-submit="user.saveUser()">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Title</label>
+				<div class="col-xs-6">
+					<input type="text" class="form-control" ng-model="challenge.challengeData.title">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Amount</label>
+				<div class="col-xs-4">
+					<input type="text" class="form-control" ng-model="challenge.challengeData.amount">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Due date</label>
+				<div class=" col-xs-4">
+				<div class="input-group date" id="datePicker">
+				
+		        	<input type="text"class="form-control" ng-model="challenge.challengeData.due_date">
+		        	<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+		        </div>	
+		        </div>
+			</div>
+
+			
+
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Theme</label>
+				<div class="col-xs-2"> 
+				<select type="text" class="form-control" ng-model="challenge.challengeData.theme">
+				    <option value="Health">Health</option>
+				    <option value="Productivity">Productivity</option>
+				    <option value="Money">Money</option>
+				    <option value="Bullshit">Bullshit</option>
+				    <option value="Other">Other</option>
+				</select>
+				</div>
+			</div>
+
+
+		</div>
 		</div>
 	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Amount</label>
-		<div class="col-sm-6">
-			<input type="text" class="form-control" ng-model="user.userData.username">
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Due date</label>
-		<div class="col-sm-6">
-			<input type="text" class="form-control" ng-model="user.userData.password">
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Theme</label>
-		<div class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Theme of your challenge<span class="caret"></span></a>
-			<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-				<li><a href="#">Health</a></li>
-				<li><a href="#">Productivity</a></li>
-				<li><a href="#">Money</a></li>
-				<li><a href="#">Other</a></li>
-				<li><a href="#">Bullshit</a></li>
-				<li class="divider"></li>
-                <li><a href="#"><span class="glyphicon glyphicon-star"></span> Other</a></li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-6">
-			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="user.type == 'create'">Create User</button>
-			<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="user.type == 'edit'">Update User</button>
-		</div>
-	</div>
-
 	</form>
 
-	<div class="row show-hide-message" ng-show="user.message">
+	<script type="text/javascript">
+
+	$(document).ready(function() {
+      $('#datePicker')
+          .datepicker({
+              format: 'yyyy-mm-dd'
+          })
+          .on('changeDate', function(e) {
+              // Revalidate the date field
+              $('#eventForm').formValidation('revalidateField', 'date');
+          });
+
+      
+  });
+  </script>
+
+	
+
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Define your tasks !</div>
+		<div class="panel-body">
+			<div class="container">
+		        <div class="control-group" id="fields">
+		            <div class="controls"> 
+		                <form role="form" autocomplete="off">
+
+		                    <div class="entry input-group col-xs-4 col-xs-offset-2">
+		                    	<span class="input-group-btn">
+			                        <input class="form-control" name="fields[]" type="text" placeholder="Tape the title of your task" />
+			                    	<span class="glyphicon glyphicon-plus"></span>
+			                            <button class="btn btn-success btn-add" type="button">
+			                                <span class="glyphicon glyphicon-plus"></span>
+			                            </button>
+			                        </span>
+
+		                    </div>
+		                </form>
+		            </div>
+		        </div>
+			</div>
+		</div>
+	</div>
+			
+		
+			<form class="form-horizontal" ng-submit="challenge.saveChallenge()">
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-xs-6">
+					<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'create'">Let's go !</button>
+					<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="challenge.type == 'edit'">Update !</button>
+				</div>
+			</div>
+
+			</form>
+	
+
+	<div class="row show-hide-message" ng-show="challenge.message">
 	<div class="col-sm-6 col-sm-offset-2">
 		
 		<div class="alert alert-info">
-			{{ user.message }}
+			{{ challenge.message }}
 		</div>
 
 	</div>
@@ -71,4 +151,5 @@
 
 
 </body>
+
 
