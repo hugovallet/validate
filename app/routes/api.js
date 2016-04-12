@@ -173,6 +173,55 @@ module.exports = function(app, express) {
 				res.json(users);
 			});
 		});
+
+
+
+		// on routes that end in /users/:user_id
+	// ----------------------------------------------------
+	apiRouter.route('/users/:user_id')
+
+		// get the user with that id
+		.get(function(req, res) {
+			User.findById(req.params.user_id, function(err, user) {
+				if (err) res.send(err);
+
+				// return that user
+				res.json(user);
+			});
+		})
+
+		// update the user with this id
+		.put(function(req, res) {
+			User.findById(req.params.user_id, function(err, user) {
+
+				if (err) res.send(err);
+
+				// set the new user information if it exists in the request
+				if (req.body.name) user.name = req.body.name;
+				if (req.body.username) user.username = req.body.username;
+				if (req.body.password) user.password = req.body.password;
+
+				// save the user
+				user.save(function(err) {
+					if (err) res.send(err);
+
+					// return a message
+					res.json({ message: 'User updated!' });
+				});
+
+			});
+		})
+
+		// delete the user with this id
+		.delete(function(req, res) {
+			User.remove({
+				_id: req.params.user_id
+			}, function(err, user) {
+				if (err) res.send(err);
+
+				res.json({ message: 'Successfully deleted' });
+			});
+		});
 	
 
 
@@ -255,7 +304,7 @@ module.exports = function(app, express) {
 				if (req.body.amount) challenge.amount = req.body.amount;
 				if (req.body.due_date) challenge.due_date = req.body.date;
 
-				// save the user
+				// save the challenge
 				challenge.save(function(err) {
 					if (err) res.send(err);
 
@@ -302,35 +351,25 @@ module.exports = function(app, express) {
 
 		.post(function(req,res){
 			var task = new Tasks();
-			console.log('Challenge : ' + challenge_id);
+			console.log('Challenge : ' + req.params.challenge_id);
 
 			task.description = req.body.description;
-			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
-			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
-			challenge.proprietary_user_id = user_id;
+			task.friend = req.body.friend;
+			task.proprietary_challenge_id = req.params.challenge_id;
 
-			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
-			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
-            	var cash = result[0].credit;
-           		console.log('Available user cash : ' + cash);
-            
-				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
-				else{
-					//Sauver le nouveau challenge dans la DB des challenges
-					challenge.save(function(err) {
-						if (err) res.send(err);
-						// return a message
-						res.json({ message: 'Challenge created!' });
-					});
-				}
-			})
+			//Sauver la nouvelle task dans la DB des tasks
+			task.save(function(err) {
+				if (err) res.send(err);
+				// return a message
+				res.json({ message: 'Task created!' });
+			});
 		
 		})
 
 
 		//get all the tasks of one challenge
 		.get(function(req, res) {
-			Tasks.find({"proprietary_challenge_id":challenge_id}, function(err, tasks) {                     
+			Tasks.find({"proprietary_challenge_id":req.params.challenge_id}, function(err, tasks) {                     
 				if (err) res.send(err);
 
 				//return matching tasks
@@ -339,56 +378,50 @@ module.exports = function(app, express) {
 		});
 
 
-
-	// on routes that end in /users/:user_id
-	// ----------------------------------------------------
-	apiRouter.route('/users/:user_id')
-
-		// get the user with that id
+	//on routes that end in /challenges/:challenge_id/tasks/:task_id
+	// --------------------------------------------------------
+	apiRouter.route('/challenges/:challenge_id/tasks/:task_id')
+		// get the task with that id
 		.get(function(req, res) {
-			User.findById(req.params.user_id, function(err, user) {
+			Tasks.findById(req.params.task_id, function(err, task) {
 				if (err) res.send(err);
 
-				// return that user
-				res.json(user);
+				// return that task
+				res.json(task);
 			});
 		})
 
-		// update the user with this id
+		// update the task with this id
 		.put(function(req, res) {
-			User.findById(req.params.user_id, function(err, user) {
+			Tasks.findById(req.params.task_id, function(err, task) {
 
 				if (err) res.send(err);
 
-				// set the new user information if it exists in the request
-				if (req.body.name) user.name = req.body.name;
-				if (req.body.username) user.username = req.body.username;
-				if (req.body.password) user.password = req.body.password;
+				// set the new task information if it exists in the request
+				if (req.body.description) task.description = req.body.description;
+				if (req.body.friend) task.friend = req.body.friend;
 
-				// save the user
-				user.save(function(err) {
+				// save the task
+				task.save(function(err) {
 					if (err) res.send(err);
 
 					// return a message
-					res.json({ message: 'User updated!' });
+					res.json({ message: 'Task updated!' });
 				});
 
 			});
 		})
 
-		// delete the user with this id
+		// delete the task with this id
 		.delete(function(req, res) {
-			User.remove({
-				_id: req.params.user_id
-			}, function(err, user) {
+			Tasks.remove({
+				_id: req.params.task_id
+			}, function(err, task) {
 				if (err) res.send(err);
 
 				res.json({ message: 'Successfully deleted' });
 			});
 		});
-
-
-
 			
 
 
