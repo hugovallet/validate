@@ -38,12 +38,20 @@ angular.module('app.routes', ['ngRoute'])
 			controllerAs: 'user'
 		})
 
-		// show all users
+		// show all challenges
 		.when('/challenges', {
 			templateUrl: 'app/views/pages/challenges/all.html',
 			controller: 'challengeController',
 			controllerAs: 'challenge'
 
+		})
+
+		// form to create a new challenge
+		// same view as edit page
+		.when('/challenge/create', {
+			templateUrl: 'app/views/pages/challenges/challengeCreate.html',
+			controller: 'challengeCreateController',
+			controllerAs: 'challenge'
 		});
 
 

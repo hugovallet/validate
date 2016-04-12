@@ -20,25 +20,31 @@ angular.module('challengeCtrl', ['challengeService'])
 			vm.challenges = data;
 		});
 
-		/*
-	// function to delete a challenge EN CONSTRUCTION
-	vm.deleteChallenge = function(id) {
+})	
+
+	// controller applied to user creation page
+.controller('challengeCreateController', function(User) {
+	
+	var vm = this;
+
+	// variable to hide/show elements of the view
+	// differentiates between create or edit pages
+	vm.type = 'create';
+
+	// function to create a user
+	vm.saveChallenge = function() {
 		vm.processing = true;
+		vm.message = '';
 
-		Challenge.delete(id)
+		// use the create function in the userService
+		Challenge.create(vm.challengeData)
 			.success(function(data) {
-
-				// get all challenges to update the table
-				// you can also set up your api 
-				// to return the list of challenges with the delete call
-				Challenge.all()
-					.success(function(data) {
-						vm.processing = false;
-						vm.challenges = data;
-					});
-
+				vm.processing = false;
+				vm.challengeData = {};
+				vm.message = data.message;
 			});
-	};
-	*/
+			
+	};	
 
-})
+});
+

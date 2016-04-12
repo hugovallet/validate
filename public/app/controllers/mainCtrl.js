@@ -16,6 +16,8 @@ angular.module('mainCtrl', [])
 			.then(function(data) {
 				vm.user = data.data;
 			});	
+
+		
 	});	
 
 	// function to handle login form
