@@ -7,7 +7,7 @@ angular.module('challengeService', [])
 
 	// get the challenges for the currrent user XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	challengeFactory.all = function(){
-		return $http.get('/api/challenges');
+		return $http.get('/api/challenges/');
 	}
 
 	// create a challenge

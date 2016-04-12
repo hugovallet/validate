@@ -22,8 +22,8 @@ angular.module('challengeCtrl', ['challengeService'])
 
 })	
 
-	// controller applied to user creation page
-.controller('challengeCreateController', function(User) {
+	// controller applied to challenge creation page
+.controller('challengeCreateController', function(Challenge) {
 	
 	var vm = this;
 
@@ -31,7 +31,7 @@ angular.module('challengeCtrl', ['challengeService'])
 	// differentiates between create or edit pages
 	vm.type = 'create';
 
-	// function to create a user
+	// function to create a challenge
 	vm.saveChallenge = function() {
 		vm.processing = true;
 		vm.message = '';

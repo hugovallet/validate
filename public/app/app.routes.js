@@ -48,7 +48,7 @@ angular.module('app.routes', ['ngRoute'])
 
 		// form to create a new challenge
 		// same view as edit page
-		.when('/challenge/create', {
+		.when('/challenges/create', {
 			templateUrl: 'app/views/pages/challenges/challengeCreate.html',
 			controller: 'challengeCreateController',
 			controllerAs: 'challenge'

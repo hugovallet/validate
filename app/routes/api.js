@@ -187,7 +187,8 @@ module.exports = function(app, express) {
 
 			challenge.title = req.body.title;
 			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
-			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
+			challenge.due_date = req.body.due_date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
+			challenge.theme = req.body.theme;
 			challenge.proprietary_user_id = user_id;
 
 			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
@@ -251,7 +252,7 @@ module.exports = function(app, express) {
 				// set the new challenge information if it exists in the request
 				if (req.body.title) challenge.title = req.body.title;
 				if (req.body.amount) challenge.amount = req.body.amount;
-				if (req.body.date) challenge.due_date = req.body.date;
+				if (req.body.due_date) challenge.due_date = req.body.date;
 
 				// save the user
 				challenge.save(function(err) {
