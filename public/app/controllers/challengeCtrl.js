@@ -65,6 +65,7 @@ angular.module('challengeCtrl', ['challengeService'])
 
 		Challenge.validate(challenge_id,task_id)
 			.success(function(data) {
+				vm.processing = false;
 
 			});
 	};	

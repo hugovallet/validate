@@ -59,6 +59,13 @@ angular.module('app.routes', ['ngRoute'])
 			templateUrl: 'app/views/pages/challenges/challengeCreate.html',
 			controller: 'challengeEditController',
 			controllerAs: 'challenge'
+		})
+
+		// page to create a task
+		.when('/challenges/:challenge_id/tasks/create', {
+			templateUrl: 'app/views/pages/tasks/taskCreate.html',
+			controller: 'taskCreateController',
+			controllerAs: 'task'
 		});
 
 

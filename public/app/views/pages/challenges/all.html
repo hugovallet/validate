@@ -21,7 +21,7 @@
 		<div ng-repeat="chal in challenge.challenges">
 			
 	    		
-					<div class="panel panel-default">
+					<div class="panel panel-default" id=pan_def>
 			      		<div class="panel-heading">
 			      			{{chal.title}}
 			      			<div class="btn-group btn-group-sm pull-right">
@@ -56,13 +56,13 @@
 										<td class="col-sm-1">
 										<div ng-if="t.validation == 'no_val'">
 											<a href="#" class="btn btn-secondary" ng-click="challenge.validateTask(chal._id,t._id)">
-												<span class="glyphicon glyphicon-ok"></span>
+												<span class="glyphicon glyphicon-ok" id="normal_ok_icon"></span>
 											</a>
 										</div>
 										<div ng-if="t.validation == 'val'">
 											<a href="#" class="btn btn-success">
 												
-													<span class="glyphicon glyphicon-ok" style="{color:rgb(112,0,0)}"></span>
+													<span class="glyphicon glyphicon-ok"></span>
 												
 												
 											</a>
@@ -77,7 +77,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<a href="#" class="btn btn-secondary">New Task</a>
+							<a href="challenges/{{chal._id }}/tasks/create" class="btn btn-secondary">New Task</a>
 
 							</div>
 				      		

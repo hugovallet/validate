@@ -70,3 +70,12 @@ header .navbar 		{
 #normal_pencil {
 	color: #474747;
 }
+
+#normal_ok_icon {
+	color: #474747;
+}
+
+#pan_def{
+	border-width: 3px;
+	margin-bottom: 10px;
+}
