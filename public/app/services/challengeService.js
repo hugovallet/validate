@@ -30,6 +30,11 @@ angular.module('challengeService', [])
 		return $http.delete('/api/challenges/' + id);
 	};
 
+	// get challenge's tasks
+	challengeFactory.get_tasks = function(id) {
+		return $http.get('/api/challenges/' + id + '/tasks/');
+	};
+
 	// return our entire challengeFactory object
 	return challengeFactory;
 

@@ -40,3 +40,17 @@ header .navbar 		{
 	from 	{ -moz-transform:rotate(0deg); }	
 	to 	{ -moz-transform:rotate(360deg); }
 }
+
+.panel-heading {
+    overflow: hidden;
+    padding-top: 0px;
+    font-size: 25px;
+}
+.btn-group {
+    position: relative;
+    top: 5px;
+}
+
+.pannel{
+   margin-bottom:50px;
+}

@@ -9,12 +9,62 @@
 
 </div>
 
-<div class="jumbotron text-center" ng-show="user.processing">
+<div class="jumbotron text-center" ng-show="challenge.processing">
 	<span class="glyphicon glyphicon-repeat spinner"></span>
 	<p>Loading Challenges...</p>
 </div>
 
-<table class="table table-bordered table-striped" ng-show="challenge.challenges">
+
+<div class="container">
+	<div class="panel-group">
+	
+		<div ng-repeat="chal in challenge.challenges">
+			
+	    		
+					<div class="panel panel-default">
+			      		<div class="panel-heading">
+			      			{{chal.title}}
+			      			<div class="btn-group btn-group-sm pull-right">
+			      				<a ng-href="/challenges/{{chal._id }}" class="btn btn-danger">Edit</a>
+								<a href="#" ng-click="challenge.deleteChallenge(chal._id)" class="btn btn-primary">Delete</a>
+							</div>
+			      		</div>
+			      		<div class="panel-body">
+				      		<ul>
+							  <li>Amount : {{chal.amount}} €</li>
+							  <li>Due date : {{chal.due_date}} </li>
+							  <li>Theme : {{chal.theme}} </li>
+							</ul>
+							<table class="table table-bordered table-striped">
+								<thead>
+									<tr>
+										<th>_id</th>
+										<th>Description</th>
+										<th>Friend</th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr ng-repeat="t in chal.tasks">
+										<td>{{ t._id }}</td>
+										<td>{{ t.description }}</td>
+										<td>{{ t.friend }}</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+							</div>
+				      		
+			      		</div>
+			      			
+			      	</div>
+			    
+			</div>
+		</div>	
+	
+</div>
+<!-- <table class="table table-bordered table-striped" ng-show="challenge.challenges">
 	<thead>
 		<tr>
 			<th>_id</th>
@@ -32,11 +82,11 @@
 			<td>{{ chal.due_date }}</td>
 			<td>{{ chal.amount }} €</td>
 			<td>{{ chal.title }}</td>
-			<!--CETTE PARTIE DOIT ETRE MODIF POUR CHARGER LES ICONES SUPPRIMER CHALLENGE/VALIDER/ETC-->
+			
 			<td class="col-sm-2">
 				<a ng-href="/challenges/{{chal._id }}" class="btn btn-danger">Edit</a>
 				<a href="#" ng-click="challenge.deleteChallenge(chal._id)" class="btn btn-primary">Delete</a>
 			</td>
 		</tr>
 	</tbody>
-</table>
+</table> -->

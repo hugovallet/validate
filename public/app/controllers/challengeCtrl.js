@@ -10,16 +10,53 @@ angular.module('challengeCtrl', ['challengeService'])
 	vm.processing = true;
 
 	// grab all the challenges at page load
-	Challenge.all()
-		.success(function(data) {
+	Challenge.all().success(function(data) {
+			
+	vm.challenges={};	
+			
+			
+
+			for (var i = 0; i < data.length; i++) {
+				(function(i,vm,data){
+
+
+				var id = data[i]._id;
+				//vm.challenges[i]["tasks"] = "une tache";
+				//console.log("first list "+vm.challenges);
+				/*
+				vm.challenges.id.amount = data[i].amount;
+				vm.challenges.id.title = data[i].title;
+				vm.challenges.id.due_date = data[i].due_date;
+				vm.challenges.id.theme = data[i].theme;
+				*/
+
+				
+				Challenge.get_tasks(id).success(function(data2){
+
+					vm.challenges[i]=data[i];
+					vm.challenges[i].tasks = data2;
+					//console.log("sec list"+vm.challenges);
+					//console.log(i);
+					//console.log(data2);
+					
+				});
+
+
+
+				})(i,vm,data);
+			
+		}
+
+			console.log("list"+vm.challenges);
 
 			// when all the challenges come back, remove the processing variable
 			vm.processing = false;
-
+			
 			// bind the challenges that come back to vm.challenges
-			vm.challenges = data;
+			//vm.challenges = data;
+			
 		});
-	// function to delete a user
+	// function to delete a challenge
 	
 	vm.deleteChallenge = function(id) {
 		vm.processing = true;

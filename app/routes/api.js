@@ -330,7 +330,7 @@ module.exports = function(app, express) {
 
 		//get all the tasks of one challenge
 		.get(function(req, res) {
-			Tasks.find({"proprietary_challenge_id":challenge_id}, function(err, tasks) {                     
+			Tasks.find({"proprietary_challenge_id":req.params.challenge_id}, function(err, tasks) {                     
 				if (err) res.send(err);
 
 				//return matching tasks
