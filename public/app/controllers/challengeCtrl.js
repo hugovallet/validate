@@ -21,23 +21,12 @@ angular.module('challengeCtrl', ['challengeService'])
 
 
 				var id = data[i]._id;
-				//vm.challenges[i]["tasks"] = "une tache";
-				//console.log("first list "+vm.challenges);
-				/*
-				vm.challenges.id.amount = data[i].amount;
-				vm.challenges.id.title = data[i].title;
-				vm.challenges.id.due_date = data[i].due_date;
-				vm.challenges.id.theme = data[i].theme;
-				*/
-
+				
 				
 				Challenge.get_tasks(id).success(function(data2){
 
 					vm.challenges[i]=data[i];
 					vm.challenges[i].tasks = data2;
-					//console.log("sec list"+vm.challenges);
-					//console.log(i);
-					//console.log(data2);
 					
 				});
 
@@ -52,10 +41,8 @@ angular.module('challengeCtrl', ['challengeService'])
 			// when all the challenges come back, remove the processing variable
 			vm.processing = false;
 			
-			// bind the challenges that come back to vm.challenges
-			//vm.challenges = data;
 			
-		});
+	});
 	// function to delete a challenge
 	
 	vm.deleteChallenge = function(id) {

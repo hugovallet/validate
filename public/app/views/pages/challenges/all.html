@@ -41,6 +41,7 @@
 										<th>_id</th>
 										<th>Description</th>
 										<th>Friend</th>
+										<th class="col-sm-2"></th>
 									</tr>
 								</thead>
 								
@@ -49,6 +50,12 @@
 										<td>{{ t._id }}</td>
 										<td>{{ t.description }}</td>
 										<td>{{ t.friend }}</td>
+										<td class="col-sm-2">
+											<a href="#" class="btn btn-secondary">
+												<span class="glyphicon glyphicon-ok" ng-if="t.validation == 'true'"></span>
+												<span class="glyphicon glyphicon-ok" ng-if="t.validation == 'false'"></span>
+											</a>
+										</td>
 									</tr>
 								</tbody>
 							</table>

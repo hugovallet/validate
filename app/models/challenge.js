@@ -9,6 +9,7 @@ var ChallengeSchema   = new Schema({
 	theme: {type: String, required: true},
 	proprietary_user_id: {type: String, required: true}
 	
+	
 });
 
 module.exports = mongoose.model('Challenges', ChallengeSchema);

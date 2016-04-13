@@ -183,7 +183,7 @@ module.exports = function(app, express) {
 		.post(function(req,res){
 			var challenge = new Challenges();
 			var user_id = req.decoded._id;
-			console.log('User : ' + user_id);
+			
 
 			challenge.title = req.body.title;
 			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
@@ -229,6 +229,11 @@ module.exports = function(app, express) {
 				res.json(challenges);
 			});
 		});
+
+
+
+
+
 
 
 	//on routes that end in /challenges/:challenge_id
