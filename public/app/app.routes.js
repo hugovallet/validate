@@ -13,7 +13,7 @@ angular.module('app.routes', ['ngRoute'])
 		.when('/login', {
 			templateUrl : 'app/views/pages/login.html',
    			controller  : 'mainController',
-    			controllerAs: 'login'
+    		controllerAs: 'login'
 		})
 		
 		// show all users
@@ -51,6 +51,13 @@ angular.module('app.routes', ['ngRoute'])
 		.when('/challenges/create', {
 			templateUrl: 'app/views/pages/challenges/challengeCreate.html',
 			controller: 'challengeCreateController',
+			controllerAs: 'challenge'
+		})
+
+		// page to edit a challenge
+		.when('/challenges/:challenge_id', {
+			templateUrl: 'app/views/pages/challenges/challengeCreate.html',
+			controller: 'challengeEditController',
 			controllerAs: 'challenge'
 		});
 

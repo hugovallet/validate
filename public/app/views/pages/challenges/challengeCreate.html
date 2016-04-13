@@ -10,29 +10,12 @@
 		<h1 ng-if="challenge.type == 'edit'">Edit Challenge</h1>
 	</div>
 
-	<!-- <div class="container">
-	<div class="row">
-        <div class="control-group" id="fields">
-            
-            <div class="controls"> 
-                <form role="form" autocomplete="off">
-                	<label class="col-sm-2 control-label" for="field1">Tasks</label>
-                    <div class="entry input-group col-xs-3">
-                        <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
-                    	<span class="input-group-btn">
-                            <button class="btn btn-success btn-add" type="button">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </span>
-                    </div>
-                </form>       
-            </div>
-        </div>
-	</div>
-	</div> -->
 
 	<div class="panel panel-default">
-		<div class="panel-heading">Set the parameters of the challenge !</div>
+		<div class="panel-heading">
+			<h5 ng-if="challenge.type == 'create'">Set the parameters of the challenge !</h5>
+			<h5 ng-if="challenge.type == 'edit'">Change the parameters of the challenge ?</h5>
+		</div>
 		<div class="panel-body">
 			<form class="form-horizontal" ng-submit="user.saveUser()">
 
@@ -95,15 +78,18 @@
               $('#eventForm').formValidation('revalidateField', 'date');
           });
 
-      
-  });
-  </script>
+	  
+	});
+	</script>
 
 	
 
 
 	<div class="panel panel-default">
-		<div class="panel-heading">Define your tasks !</div>
+		<div class="panel-heading">
+			<h5 ng-if="challenge.type == 'create'">Define your tasks !</h5>
+			<h5 ng-if="challenge.type == 'edit'">Modify your tasks ?</h5>
+		</div>
 		<div class="panel-body">
 			<div class="container">
 		        <div class="control-group" id="fields">

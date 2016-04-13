@@ -62,5 +62,41 @@ angular.module('challengeCtrl', ['challengeService'])
 			
 	};	
 
+})
+
+// controller applied to challenge edit page
+.controller('challengeEditController', function($routeParams, Challenge) {
+
+	var vm = this;
+
+	// variable to hide/show elements of the view
+	// differentiates between create or edit pages
+	vm.type = 'edit';
+
+	// get the challenge data for the challenge you want to edit
+	// $routeParams is the way we grab data from the URL
+	Challenge.get($routeParams.challenge_id)
+		.success(function(data) {
+			vm.challengeData = data;
+		});
+
+	// function to save the user
+	vm.saveChallenge = function() {
+		vm.processing = true;
+		vm.message = '';
+
+		// call the userService function to update 
+		Challenge.update($routeParams.challenge_id, vm.challengeData)
+			.success(function(data) {
+				vm.processing = false;
+
+				// clear the form
+				vm.challengeData = {};
+
+				// bind the message from our API to vm.message
+				vm.message = data.message;
+			});
+	};
+
 });
 
