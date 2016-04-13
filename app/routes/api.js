@@ -146,6 +146,7 @@ module.exports = function(app, express) {
 			user.username = req.body.username;  // set the users username (comes from the request)
 			user.password = req.body.password;  // set the users password (comes from the request)
 			user.credit = 50; //POUR CETTE VERSION TEST, CHAQUE NOUVEL UTILISATEUR SE VOIT OFFRIR 50e A LA CREATION DU COMPTE
+			user.friend = req.body.friend; //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 			user.save(function(err) {
 				if (err) {
@@ -191,7 +192,7 @@ module.exports = function(app, express) {
 			challenge.theme = req.body.theme;
 			challenge.proprietary_user_id = user_id;
 
-			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
+			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si suffisament de crédits
 			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
             	var cash = result[0].credit;
            		console.log('Available user cash : ' + cash);
@@ -307,28 +308,22 @@ module.exports = function(app, express) {
 
 		.post(function(req,res){
 			var task = new Tasks();
-			console.log('Challenge : ' + challenge_id);
+			var user_id = req.decoded._id;
+			console.log('Challenge : ' + req.params.challenge_id);
 
 			task.description = req.body.description;
-			challenge.amount = req.body.amount; //ATTENTION IL FAUDRA CHECKER QUE LE MEC A SUFFISAMENT de crédit EN STOCK et aussi débiter le stock du gars après création
-			challenge.due_date = req.body.date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
-			challenge.proprietary_user_id = user_id;
+			task.friend = req.body.friend;
+			task.proprietary_challenge_id = req.params.challenge_id;
 
-			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
-			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
-            	var cash = result[0].credit;
-           		console.log('Available user cash : ' + cash);
-            
-				if(cash<challenge.amount) res.send({message:"Not enough credits available"});
-				else{
-					//Sauver le nouveau challenge dans la DB des challenges
-					challenge.save(function(err) {
-						if (err) res.send(err);
-						// return a message
-						res.json({ message: 'Challenge created!' });
-					});
-				}
-			})
+			User.update({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
+			});
+
+			//Sauver la nouvelle task dans la DB des tasks
+			task.save(function(err) {
+				if (err) res.send(err);
+				// return a message
+				res.json({ message: 'Task created!' });
+			});
 		
 		})
 
@@ -343,7 +338,51 @@ module.exports = function(app, express) {
 			});
 		});
 
+// on routes that end in /challenges/:challenge_id/tasks/:task_id
+	// ----------------------------------------------------
+	apiRouter.route('/challenges/:challenge_id/tasks/:task_id')
 
+		// get the task with that id
+		.get(function(req, res) {
+			Tasks.findById(req.params.task_id, function(err, user) {
+				if (err) res.send(err);
+
+				// return that task
+				res.json(user);
+			});
+		})
+
+		// update the task with this id
+		.put(function(req, res) {
+			Tasks.findById(req.params.task_id, function(err, task) {
+
+				if (err) res.send(err);
+
+				// set the new task information if it exists in the request
+				if (req.body.description) task.description = req.body.description;
+				if (req.body.friend) task.friend = req.body.friend;
+
+				// save the task
+				task.save(function(err) {
+					if (err) res.send(err);
+
+					// return a message
+					res.json({ message: 'Task updated!' });
+				});
+
+			});
+		})
+
+		// delete the task with this id
+		.delete(function(req, res) {
+			Tasks.remove({
+				_id: req.params.task_id
+			}, function(err, task) {
+				if (err) res.send(err);
+
+				res.json({ message: 'Successfully deleted' });
+			});
+		});
 
 	// on routes that end in /users/:user_id
 	// ----------------------------------------------------
@@ -402,9 +441,11 @@ module.exports = function(app, express) {
 		data = req.decoded;
 		user_id = data._id;
 		
-		User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
+		User.find({"_id":user_id},{"_id":0,"credit":1,"friend":1}, function(err, result){  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         	var cash = result[0].credit;
+        	var ami = result[0].friend;
 			data["credit"] = cash;
+			data["friend"] = ami;
 			res.send(data);
 		});
 	});
