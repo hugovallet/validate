@@ -146,6 +146,7 @@ module.exports = function(app, express) {
 			user.username = req.body.username;  // set the users username (comes from the request)
 			user.password = req.body.password;  // set the users password (comes from the request)
 			user.credit = 50; //POUR CETTE VERSION TEST, CHAQUE NOUVEL UTILISATEUR SE VOIT OFFRIR 50e A LA CREATION DU COMPTE
+			user.friend = req.body.friend; //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 			user.save(function(err) {
 				if (err) {
@@ -240,7 +241,7 @@ module.exports = function(app, express) {
 			challenge.theme = req.body.theme;
 			challenge.proprietary_user_id = user_id;
 
-			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si sufisament de crédits
+			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si suffisament de crédits
 			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
             	var cash = result[0].credit;
            		console.log('Available user cash : ' + cash);
@@ -331,11 +332,15 @@ module.exports = function(app, express) {
 
 		.post(function(req,res){
 			var task = new Tasks();
+			var user_id = req.decoded._id;
 			console.log('Challenge : ' + req.params.challenge_id);
 
 			task.description = req.body.description;
 			task.friend = req.body.friend;
 			task.proprietary_challenge_id = req.params.challenge_id;
+
+			User.save({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
+			});
 
 			//Sauver la nouvelle task dans la DB des tasks
 			task.save(function(err) {
@@ -410,9 +415,11 @@ module.exports = function(app, express) {
 		data = req.decoded;
 		user_id = data._id;
 		
-		User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
+		User.find({"_id":user_id},{"_id":0,"credit":1,"friend":1}, function(err, result){  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         	var cash = result[0].credit;
+        	var ami = result[0].friend;
 			data["credit"] = cash;
+			data["friend"] = ami;
 			res.send(data);
 		});
 	});
