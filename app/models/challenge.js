@@ -6,6 +6,7 @@ var ChallengeSchema   = new Schema({
 	title: {type: String, required: true},
 	amount: { type: Number, required: true},
 	due_date: {type: Date, required: true},
+	theme: {type: String, required: true},
 	proprietary_user_id: {type: String, required: true}
 	
 });

@@ -62,16 +62,26 @@
 			<li ng-if="!main.loggedIn"><a href="/login">Login</a></li>
 			<li ng-if="main.loggedIn" class="navbar-text">Hello {{ main.user.username }}!</li>
 			<li ng-if="main.loggedIn" class="navbar-text">Cash : {{ main.user.credit }}€</li>
+			<li ng-if="main.loggedIn" class="navbar-text" id="#date"></li>
+
 			<li ng-if="main.loggedIn"><a href="#" ng-click="main.doLogout()">Logout</a></li>
 		</ul>
 	</div>
 	</div>
 </header>
 
+<script type="text/javascript">
+	var today = new Date();
+	document.getElementById('#date').innerHTML=today.toDateString();
+</script>
+
 <main class="container">
 	<!-- ANGULAR VIEWS -->
 	<div ng-view></div>
 </main>
 
+
+
 </body>
 </html>
+
