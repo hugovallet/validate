@@ -9,7 +9,6 @@ $(function()
             newEntry = $(currentEntry.clone()).appendTo(controlForm);
 
         newEntry.find('input').val('');
-        console.log(newEntry.find('input').val(''))
         controlForm.find('.entry:not(:last) .btn-add')
                    .removeClass('btn-add').addClass('btn-remove')
                    .removeClass('btn-success').addClass('btn-danger')
@@ -20,5 +19,9 @@ $(function()
 		$(this).parents('.entry:first').remove();
 		e.preventDefault();
 		return false;
-	});
+	}).on("click", ".btn btn-success btn-lg btn-block",function(e)
+  console.log(newEntry.find('input').val('')  )
+  {
+
+  })
 });

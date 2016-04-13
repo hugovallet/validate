@@ -357,10 +357,20 @@ module.exports = function(app, express) {
 			Tasks.findById(req.params.task_id, function(err, task) {
 
 				if (err) res.send(err);
+				var task_id = req.params.task_id;
+				var task_status = task.validation;
 
 				// set the new task information if it exists in the request
 				if (req.body.description) task.description = req.body.description;
 				if (req.body.friend) task.friend = req.body.friend;
+
+				if(!req.body.friend && !req.body.description) {
+					if(task_status=="no_val")
+						Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { 
+							if (err) res.send(err);
+							
+						 });
+				}
 
 				// save the task
 				task.save(function(err) {

@@ -6,8 +6,8 @@ var TaskSchema   = new Schema({
 	description: {type: String, required: true},
 	friend: { type: String, required: false},
 	proprietary_challenge_id: {type: String, required: true},
-	validation: {type: Boolean},
-	validation_friend: {type:Boolean}
+	validation: {type: String},
+	
 	
 });
 

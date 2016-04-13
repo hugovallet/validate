@@ -35,6 +35,11 @@ angular.module('challengeService', [])
 		return $http.get('/api/challenges/' + id + '/tasks/');
 	};
 
+	// get challenge's tasks
+	challengeFactory.validate = function(challenge_id,task_id) {
+		return $http.put('/api/challenges/' + challenge_id + '/tasks/'+ task_id);
+	};
+
 	// return our entire challengeFactory object
 	return challengeFactory;
 

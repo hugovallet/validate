@@ -58,6 +58,15 @@ angular.module('challengeCtrl', ['challengeService'])
 					});
 
 			});
+	};
+
+	vm.validateTask = function(challenge_id,task_id) {
+		vm.processing = true;
+
+		Challenge.validate(challenge_id,task_id)
+			.success(function(data) {
+
+			});
 	};	
 
 })	

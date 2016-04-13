@@ -62,6 +62,8 @@ angular.module('app.routes', ['ngRoute'])
 		});
 
 
+
+
 	$locationProvider.html5Mode(true);
 
 });

@@ -25,8 +25,8 @@
 			      		<div class="panel-heading">
 			      			{{chal.title}}
 			      			<div class="btn-group btn-group-sm pull-right">
-			      				<a ng-href="/challenges/{{chal._id }}" class="btn btn-danger">Edit</a>
-								<a href="#" ng-click="challenge.deleteChallenge(chal._id)" class="btn btn-primary">Delete</a>
+			      				<a ng-href="/challenges/{{chal._id }}" class="glyphicon glyphicon-pencil" id="normal_pencil"></a>
+								<a href="#" ng-click="challenge.deleteChallenge(chal._id)" class="glyphicon glyphicon-remove" id="normal_cross"></a>
 							</div>
 			      		</div>
 			      		<div class="panel-body">
@@ -41,25 +41,43 @@
 										<th>_id</th>
 										<th>Description</th>
 										<th>Friend</th>
-										<th class="col-sm-2"></th>
+										<th>Validated</th>
+										<th class="col-sm-1"></th>
 									</tr>
 								</thead>
 								
 								<tbody>
 									<tr ng-repeat="t in chal.tasks">
+
 										<td>{{ t._id }}</td>
 										<td>{{ t.description }}</td>
 										<td>{{ t.friend }}</td>
-										<td class="col-sm-2">
-											<a href="#" class="btn btn-secondary">
-												<span class="glyphicon glyphicon-ok" ng-if="t.validation == 'true'"></span>
-												<span class="glyphicon glyphicon-ok" ng-if="t.validation == 'false'"></span>
+										<td>{{ t.validation }}</td>
+										<td class="col-sm-1">
+										<div ng-if="t.validation == 'no_val'">
+											<a href="#" class="btn btn-secondary" ng-click="challenge.validateTask(chal._id,t._id)">
+												<span class="glyphicon glyphicon-ok"></span>
 											</a>
+										</div>
+										<div ng-if="t.validation == 'val'">
+											<a href="#" class="btn btn-success">
+												
+													<span class="glyphicon glyphicon-ok" style="{color:rgb(112,0,0)}"></span>
+												
+												
+											</a>
+										</div>
+										<div ng-if="t.validation == 'double_val'">
+											<a href="#" class="btn btn-warning" >
+												<span class="glyphicon glyphicon-star"></span>
+											</a>
+										</div>
+											
 										</td>
 									</tr>
 								</tbody>
 							</table>
-
+							<a href="#" class="btn btn-secondary">New Task</a>
 
 							</div>
 				      		

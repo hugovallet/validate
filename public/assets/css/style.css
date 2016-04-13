@@ -55,6 +55,18 @@ header .navbar 		{
    margin-bottom:50px;
 }
 
-.glyphicon-ok{
-	color:#B0B0B0  ;
+.table td {
+   text-align: center;   
+}
+
+.table th {
+   text-align: center;   
+}
+
+#normal_cross {
+	color: #474747;
+}
+
+#normal_pencil {
+	color: #474747;
 }
