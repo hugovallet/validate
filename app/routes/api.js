@@ -191,6 +191,8 @@ module.exports = function(app, express) {
 			challenge.due_date = req.body.due_date; //Attention il faudra que cette date soit bien stockée dans le format "date" de javascript pour éviter les problèmes après...
 			challenge.theme = req.body.theme;
 			challenge.proprietary_user_id = user_id;
+			challenge.points = 0; //au début, quand le challenge est créé le mec à zéros points.
+			challenge.total_points = 0; //tant que le mec à pas rajouté des tâches le score max est à zéro aussi.
 
 			//Chercher le nombre de crédits dispo sur le compte user, ensuite créer le challenge si suffisament de crédits
 			User.find({"_id":user_id},{"_id":0,"credit":1}, function(err, result){
@@ -309,7 +311,8 @@ module.exports = function(app, express) {
 		.post(function(req,res){
 			var task = new Tasks();
 			var user_id = req.decoded._id;
-			console.log('Challenge : ' + req.params.challenge_id);
+			var challenge_id = req.params.challenge_id;
+			console.log('Challenge : ' + challenge_id);
 
 			task.description = req.body.description;
 			task.friend = req.body.friend;
@@ -318,13 +321,23 @@ module.exports = function(app, express) {
 
 			/*User.update({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
 			});*/
-
-			//Sauver la nouvelle task dans la DB des tasks
-			task.save(function(err) {
+			
+			//On cherche le challenge associé pour récupérer le nombre total de points en cours
+			Challenges.find({"_id":challenge_id},{"_id":0,"total_points":1}, function(err, challenge) {                     
 				if (err) res.send(err);
-				// return a message
-				res.json({ message: 'Task created!' });
+				//On stock le nombre actuel de points total
+				var points = challenge[0].total_points; 
+				//on rajoute 3 point au nombre max de points actuel
+				Challenges.update({ "_id" : challenge_id },{ $set: { "total_points": points + 3} }, function(err, results) {  });
+				//Ensuite on peut sauver la nouvelle task dans la DB des tasks
+				task.save(function(err) {
+					if (err) res.send(err);
+					// return a message
+					res.json({ message: 'Task created!' });
+				});
+				
 			});
+			
 		
 		})
 
@@ -359,18 +372,48 @@ module.exports = function(app, express) {
 
 				if (err) res.send(err);
 				var task_id = req.params.task_id;
+				var challenge_id = req.params.challenge_id;
 				var task_status = task.validation;
 
 				// set the new task information if it exists in the request
 				if (req.body.description) task.description = req.body.description;
 				if (req.body.friend) task.friend = req.body.friend;
 
-				if(!req.body.friend && !req.body.description) {
-					if(task_status=="no_val")
-						Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { 
+				if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
+					//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
+					if(task_status=="no_val"){
+						Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { if (err) res.send(err);});
+						//ensuite on met à jour le nombre de points en cours du challenge
+						Challenges.findById(challenge_id, function(err, challenge) {
 							if (err) res.send(err);
+							//ici on récupère le nombre de points en cours
+							var current_points = challenge.points;
+							//ici on met a jour ce nombre de points
+							var new_points = current_points + 3;
+							console.log(current_points);
+							console.log(task_status);
+							console.log(new_points);
+							Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+						});
 
-						 });
+					}
+
+						 
+
+					if(task_status=="val"){
+						Tasks.update({ "_id" : task_id },{ $set: {"validation": "no_val"} }, function(err, results) {if (err) res.send(err);});
+						Challenges.findById(challenge_id, function(err, challenge) {
+							if (err) res.send(err);
+							//ici on récupère le nombre de points en cours
+							var current_points = challenge.points;
+							//ici on met a jour ce nombre de points
+							var new_points = current_points - 3;
+							console.log(current_points);
+							console.log(task_status);
+							console.log(new_points);
+							Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+						});
+					}
 				}
 
 				// save the task

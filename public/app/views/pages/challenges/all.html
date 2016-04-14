@@ -60,7 +60,7 @@
 											</a>
 										</div>
 										<div ng-if="t.validation == 'val'">
-											<a href="#" class="btn btn-success">
+											<a href="#" class="btn btn-success" ng-click="challenge.validateTask(chal._id,t._id)">
 												
 													<span class="glyphicon glyphicon-ok"></span>
 												
@@ -78,6 +78,9 @@
 								</tbody>
 							</table>
 							<a href="challenges/{{chal._id }}/tasks/create" class="btn btn-secondary">New Task</a>
+							<div class="btn-group btn-group-sm pull-right">
+			      				<span class="label label-default" >Points : {{chal.points}} / {{chal.total_points}}</span>
+							</div>
 
 							</div>
 				      		
