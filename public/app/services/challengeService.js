@@ -1,6 +1,6 @@
-angular.module('challengeService', [])
+angular.module('challengeService', ['ngRoute'])
 
-.factory('Challenge', function($http) {
+.factory('Challenge', function($http,$route) {
 
 	// create a new object
 	var challengeFactory = {};
@@ -37,6 +37,7 @@ angular.module('challengeService', [])
 
 	// get challenge's tasks
 	challengeFactory.validate = function(challenge_id,task_id) {
+		$route.reload();
 		return $http.put('/api/challenges/' + challenge_id + '/tasks/'+ task_id);
 	};
 

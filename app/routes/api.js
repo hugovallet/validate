@@ -389,7 +389,7 @@ module.exports = function(app, express) {
 							//ici on récupère le nombre de points en cours
 							var current_points = challenge.points;
 							//ici on met a jour ce nombre de points
-							var new_points = current_points + 3;
+							var new_points = current_points + 1;
 							console.log(current_points);
 							console.log(task_status);
 							console.log(new_points);
@@ -407,7 +407,7 @@ module.exports = function(app, express) {
 							//ici on récupère le nombre de points en cours
 							var current_points = challenge.points;
 							//ici on met a jour ce nombre de points
-							var new_points = current_points - 3;
+							var new_points = current_points - 1;
 							console.log(current_points);
 							console.log(task_status);
 							console.log(new_points);
