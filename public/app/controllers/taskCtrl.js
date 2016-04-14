@@ -9,6 +9,7 @@ angular.module('taskCtrl', ['taskService'])
 	vm.saveTask = function() {
 		vm.processing = true;
 		vm.message = '';
+		console.log(vm.taskData);
 
 		// use the create function in the userService
 		Task.create(vm.taskData)

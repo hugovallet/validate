@@ -314,6 +314,7 @@ module.exports = function(app, express) {
 			task.description = req.body.description;
 			task.friend = req.body.friend;
 			task.proprietary_challenge_id = req.params.challenge_id;
+			task.validation = "no_val";
 
 			/*User.update({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
 			});*/
@@ -368,7 +369,7 @@ module.exports = function(app, express) {
 					if(task_status=="no_val")
 						Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { 
 							if (err) res.send(err);
-							
+
 						 });
 				}
 

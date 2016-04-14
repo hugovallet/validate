@@ -83,39 +83,7 @@
 	</script>
 
 	
-/////////////////////////////LA LISTE DES TACHES DU CHALLENGE///////////////////////////////////////
-<div class="form-group">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h5 ng-if="challenge.type == 'create'">Define your tasks !</h5>
-			<h5 ng-if="challenge.type == 'edit'">Modify your tasks ?</h5>
-		</div>
-		<div class="panel-body">
-			<div class="container">
-		        <div class="control-group" id="fields">
-		            <div class="controls"> 
-		                <form role="form" autocomplete="on">
 
-		                    <div class="entry input-group col-xs-4 col-xs-offset-2">
-		                    	<span class="input-group-btn">
-			                        <input class="form-control" name="fields[]" type="text" placeholder="Tape the title of your task" ng-model="challenge.challengeData.tasks"/>
-			                    	<span class="glyphicon glyphicon-plus"></span>
-			                            <button class="btn btn-success btn-add" type="button">
-			                                <span class="glyphicon glyphicon-plus"></span>
-			                            </button>
-			                        </span>
-
-		                    </div>
-		                </form>
-		            </div>
-		        </div>
-			</div>
-		</div>
-	</div>
-</div>
-			
-/////////////////////////LE BOUTON POUR SUBMIT/////////////////////////////////////////////////////////
-		
 	<form class="form-horizontal" ng-submit="challenge.saveChallenge()">
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-xs-6">
