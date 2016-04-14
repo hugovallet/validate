@@ -65,6 +65,13 @@ angular.module('app.routes', ['ngRoute'])
 			templateUrl: 'app/views/pages/tasks/taskCreate.html',
 			controller: 'taskCreateController',
 			controllerAs: 'task'
+		})
+
+		// show all mentorings
+		.when('/mentorings', {
+			templateUrl: 'app/views/pages/mentoring/all_mentorings.html',
+			controller: 'challengeController',
+			controllerAs: 'challenge',
 		});
 
 

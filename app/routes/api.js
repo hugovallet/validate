@@ -4,6 +4,7 @@ var Challenges = require('../models/challenge');
 var Tasks      = require('../models/task');
 var jwt        = require('jsonwebtoken');
 var config     = require('../../config');
+var async      = require('async');
 
 // super secret for creating tokens
 var superSecret = config.secret;
@@ -503,6 +504,111 @@ module.exports = function(app, express) {
 			res.send(data);
 		});
 	});
+
+
+	////////////////////////////////MENTORING : RECUPERER ET VALIDER LES TACHES DES AUTRES//////////////////////////////////////
+
+
+	apiRouter.route('/mentorings')
+
+		// get the user with that id
+		.get(function(req, res) {
+			var user_id = req.decoded._id;
+			var data = [];
+			//Trouver les tâches où cet utilisateur est désigné comme ami
+			Tasks.find({"friend":user_id},{"validation":1,"description":1, "proprietary_challenge_id":1}, function(err,tasks){
+				//pour chacune des taches trouvées, aller chercher le challenge associé et ensuite le user associé au challenge afin de savoir qui m'a designé comme mentor
+				
+				/*for (var i = 0; i < tasks.length; i++) {
+					(function(i,tasks){
+						//on récupère les données de la tâche
+						var task_id = tasks[i]._id;
+						var description = tasks[i].description;
+						var validation = tasks[i].validation;
+
+						//on récupère le challenge associé
+						var challenge_id = tasks[i].proprietary_challenge_id;
+						
+						//on récupère le user associé
+						Challenges.findById(challenge_id,function(err,challenge){
+							
+							user_id=challenge.proprietary_user_id;
+							
+							//on récupère les infos du user (typiquement son nom plutot que son "id" !)
+							User.findById(user_id, function(err,user){
+								creator_name=user.name;
+								//on crée une nouvelle "ligne" contenant tous les objets
+								var obj = { 
+									        id: task_id,
+									        description : description,
+									        validation : validation,
+									        challenge: challenge_id,
+									        user_id: user_id,
+									        name: creator_name} ;
+
+								//on stock cette ligne dans l'objet data retourné à la fin
+								data.push(obj);
+								//console.log(data);
+								console.log(i);
+								if(i==tasks.length-1)res.json(data);
+							});
+
+						});	
+
+					})(i,tasks);
+				
+				
+					
+				};*/
+
+				async.forEachOf(tasks,function(proprietary_challenge_id,i){
+					//on récupère les données de la tâche
+					var task_id = tasks[i]._id;
+					var description = tasks[i].description;
+					var validation = tasks[i].validation;
+
+					//on récupère le challenge associé
+					var challenge_id = tasks[i].proprietary_challenge_id;
+					
+					//on récupère le user associé
+					Challenges.findById(challenge_id,function(err,challenge){
+						
+						user_id=challenge.proprietary_user_id;
+						
+						//on récupère les infos du user (typiquement son nom plutot que son "id" !)
+						User.findById(user_id, function(err,user){
+							creator_name=user.name;
+							//on crée une nouvelle "ligne" contenant tous les objets
+							var obj = { 
+								        id: task_id,
+								        description : description,
+								        validation : validation,
+								        challenge: challenge_id,
+								        user_id: user_id,
+								        name: creator_name} ;
+
+							//on stock cette ligne dans l'objet data retourné à la fin
+							data.push(obj);
+							//console.log(data);
+							console.log(i);
+							if(i==tasks.length-1)res.json(data);
+						});
+
+					});	
+
+				});
+				
+					
+			});
+
+
+				
+		});	
+				
+
+		
+			
+		
 
 	return apiRouter;
 };

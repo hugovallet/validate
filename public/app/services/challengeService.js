@@ -27,6 +27,7 @@ angular.module('challengeService', ['ngRoute'])
 
 	// delete a challenge
 	challengeFactory.delete = function(id) {
+		//$route.reload();	
 		return $http.delete('/api/challenges/' + id);
 	};
 
@@ -37,7 +38,7 @@ angular.module('challengeService', ['ngRoute'])
 
 	// get challenge's tasks
 	challengeFactory.validate = function(challenge_id,task_id) {
-		$route.reload();
+		$route.reload();	
 		return $http.put('/api/challenges/' + challenge_id + '/tasks/'+ task_id);
 	};
 
