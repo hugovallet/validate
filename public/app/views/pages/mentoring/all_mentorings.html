@@ -5,7 +5,7 @@
 
 </div>
 
-<div class="jumbotron text-center" ng-show="challenge.processing">
+<div class="jumbotron text-center" ng-show="mentoring.processing">
 	<span class="glyphicon glyphicon-repeat spinner"></span>
 	<p>Loading Challenges...</p>
 </div>
@@ -30,5 +30,10 @@
 			      	</div>
 		</div>
 
+	</div>
+	<div class="panel-group" ng-if="mentoring.mentorings.length == 0">
+		<div class="jumbotron text-center">
+			<p> Currently, nobody added you as a mentor.</p>
+		</div>
 	</div>
 </div>

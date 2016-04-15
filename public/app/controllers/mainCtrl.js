@@ -45,7 +45,7 @@ angular.module('mainCtrl', [])
 		Auth.logout();
 		vm.user = '';
 		
-		$location.path('/home');
+		$location.path('/');
 	};
 
 	vm.createSample = function() {

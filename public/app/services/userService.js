@@ -30,6 +30,11 @@ angular.module('userService', [])
 		return $http.delete('/api/users/' + id);
 	};
 
+	//get users friends
+	userFactory.friends = function(){
+		return $http.get('/api/friends');
+	};
+
 
 	// return our entire userFactory object
 	return userFactory;

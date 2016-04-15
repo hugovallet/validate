@@ -1,4 +1,4 @@
-angular.module('challengeCtrl', ['challengeService'])
+angular.module('challengeCtrl', ['challengeService','ngRoute'])
 
 //EN CONSTRUCTION
 
@@ -40,6 +40,7 @@ angular.module('challengeCtrl', ['challengeService'])
 
 			// when all the challenges come back, remove the processing variable
 			vm.processing = false;
+
 			
 			
 	});
@@ -55,6 +56,7 @@ angular.module('challengeCtrl', ['challengeService'])
 					.success(function(data) {
 						vm.processing = false;
 						vm.challenges = data;
+						
 					});
 
 			});

@@ -548,14 +548,28 @@ module.exports = function(app, express) {
 		data = req.decoded;
 		user_id = data._id;
 		
-		User.find({"_id":user_id},{"_id":0,"credit":1,"friend":1}, function(err, result){  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		User.find({"_id":user_id},{"_id":0,"credit":1,"friends":1}, function(err, result){  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         	var cash = result[0].credit;
-        	var ami = result[0].friend;
+        	var amis = result[0].friends;
 			data["credit"] = cash;
-			data["friend"] = ami;
+			data["friends"] = amis;
 			res.send(data);
 		});
 	});
+
+	//api endpoint to get my friends
+	apiRouter.get('/friends', function(req, res) {
+		data = req.decoded;
+		user_id = data._id;
+		
+		User.findById(user_id, function(err, result){  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        	
+        	var amis = result.friends;
+			
+			res.send(amis);
+		});
+	});
+
 
 
 	////////////////////////////////MENTORING : RECUPERER ET VALIDER LES TACHES DES AUTRES//////////////////////////////////////
