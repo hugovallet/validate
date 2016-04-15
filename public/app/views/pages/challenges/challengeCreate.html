@@ -50,7 +50,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Theme</label>
 				<div class="col-xs-2"> 
-				<select type="text" class="form-control" ng-model="challenge.challengeData.theme">
+				<select type="text" data-live-search="false" class="selectpicker" ng-model="challenge.challengeData.theme">
 				    <option value="Health">Health</option>
 				    <option value="Productivity">Productivity</option>
 				    <option value="Money">Money</option>
@@ -77,6 +77,7 @@
               // Revalidate the date field
               $('#eventForm').formValidation('revalidateField', 'date');
           });
+      $('.selectpicker').selectpicker();
 
 	  
 	});

@@ -70,8 +70,8 @@ angular.module('app.routes', ['ngRoute'])
 		// show all mentorings
 		.when('/mentorings', {
 			templateUrl: 'app/views/pages/mentoring/all_mentorings.html',
-			controller: 'challengeController',
-			controllerAs: 'challenge',
+			controller: 'mentoringController',
+			controllerAs: 'mentoring',
 		});
 
 

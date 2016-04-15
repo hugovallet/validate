@@ -12,6 +12,23 @@
 
 
 <div class="container">
+	<div class="panel-group">
 	
-	
+		<div ng-repeat="t in mentoring.mentorings">
+			
+	    		
+					<div class="panel panel-default" id=pan_def>
+			      		<div class="panel-heading">
+			      			{{t.proprietary_user_username}}
+			      			<div class="btn-group btn-group-sm pull-right">
+								<a href="#" ng-click="mentoring.validateMentoring(t.proprietary_challenge_id,t._id)" class="btn btn-warning" id="validate_butn">Validate !</a>
+							</div>
+			      		</div>
+			      		<div class="panel-body">
+			      			{{t.description}}
+			      		</div>
+			      	</div>
+		</div>
+
+	</div>
 </div>

@@ -309,6 +309,7 @@ module.exports = function(app, express) {
 	// --------------------------------------------------------
 	apiRouter.route('/challenges/:challenge_id/tasks')
 
+		//permet de créer une nouvelle tache
 		.post(function(req,res){
 			var task = new Tasks();
 			var user_id = req.decoded._id;
@@ -318,6 +319,8 @@ module.exports = function(app, express) {
 			task.description = req.body.description;
 			task.friend = req.body.friend;
 			task.proprietary_challenge_id = req.params.challenge_id;
+			task.proprietary_user_id = user_id;
+			task.proprietary_user_username = req.decoded.username;
 			task.validation = "no_val";
 
 			/*User.update({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
@@ -375,47 +378,96 @@ module.exports = function(app, express) {
 				var task_id = req.params.task_id;
 				var challenge_id = req.params.challenge_id;
 				var task_status = task.validation;
+				var user_id = req.decoded._id;
 
 				// set the new task information if it exists in the request
 				if (req.body.description) task.description = req.body.description;
 				if (req.body.friend) task.friend = req.body.friend;
 
-				if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
-					//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
-					if(task_status=="no_val"){
-						Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { if (err) res.send(err);});
-						//ensuite on met à jour le nombre de points en cours du challenge
-						Challenges.findById(challenge_id, function(err, challenge) {
-							if (err) res.send(err);
-							//ici on récupère le nombre de points en cours
-							var current_points = challenge.points;
-							//ici on met a jour ce nombre de points
-							var new_points = current_points + 1;
-							console.log(current_points);
-							console.log(task_status);
-							console.log(new_points);
-							Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
-						});
+				//Il faut d'abord récupérer une info utile : qui a créé la tache ?
 
+				Tasks.findById(task_id,{"_id":0,"proprietary_user_id":1},function(err,result){
+					proprietary_user_id = result.proprietary_user_id;
+					//ensuite on regarde si l'emeteur du put est le créateur de la tache : si c'est le cas alors cela veut dire qu'il s'agit d'une self-validation, sinon cela veut dire que la validation est faite par le mentor !
+					if(proprietary_user_id==user_id){
+
+						if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
+							//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
+							if(task_status=="no_val"){
+								Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { if (err) res.send(err);});
+								//ensuite on met à jour le nombre de points en cours du challenge
+								Challenges.findById(challenge_id, function(err, challenge) {
+									if (err) res.send(err);
+									//ici on récupère le nombre de points en cours
+									var current_points = challenge.points;
+									//ici on met a jour ce nombre de points
+									var new_points = current_points + 1;
+									console.log(current_points);
+									console.log(task_status);
+									console.log(new_points);
+									Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+								});
+
+							}
+
+								 
+
+							if(task_status=="val"){
+								Tasks.update({ "_id" : task_id },{ $set: {"validation": "no_val"} }, function(err, results) {if (err) res.send(err);});
+								Challenges.findById(challenge_id, function(err, challenge) {
+									if (err) res.send(err);
+									//ici on récupère le nombre de points en cours
+									var current_points = challenge.points;
+									//ici on met a jour ce nombre de points
+									var new_points = current_points - 1;
+									console.log(current_points);
+									console.log(task_status);
+									console.log(new_points);
+									Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+								});
+							}
+						}
 					}
+					if(proprietary_user_id!=user_id){
+						if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
+							//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
+							if(task_status=="no_val"){
+								Tasks.update({ "_id" : task_id },{ $set: {"validation": "double_val"} }, function(err, results) { if (err) res.send(err);});
+								//ensuite on met à jour le nombre de points en cours du challenge
+								Challenges.findById(challenge_id, function(err, challenge) {
+									if (err) res.send(err);
+									//ici on récupère le nombre de points en cours
+									var current_points = challenge.points;
+									//ici on met a jour ce nombre de points
+									var new_points = current_points + 3;
+									console.log(current_points);
+									console.log(task_status);
+									console.log(new_points);
+									Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+								});
 
-						 
+							};
+							if(task_status=="val"){
+								Tasks.update({ "_id" : task_id },{ $set: {"validation": "double_val"} }, function(err, results) { if (err) res.send(err);});
+								//ensuite on met à jour le nombre de points en cours du challenge
+								Challenges.findById(challenge_id, function(err, challenge) {
+									if (err) res.send(err);
+									//ici on récupère le nombre de points en cours
+									var current_points = challenge.points;
+									//ici on met a jour ce nombre de points
+									var new_points = current_points + 2;
+									console.log(current_points);
+									console.log(task_status);
+									console.log(new_points);
+									Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
+								});
 
-					if(task_status=="val"){
-						Tasks.update({ "_id" : task_id },{ $set: {"validation": "no_val"} }, function(err, results) {if (err) res.send(err);});
-						Challenges.findById(challenge_id, function(err, challenge) {
-							if (err) res.send(err);
-							//ici on récupère le nombre de points en cours
-							var current_points = challenge.points;
-							//ici on met a jour ce nombre de points
-							var new_points = current_points - 1;
-							console.log(current_points);
-							console.log(task_status);
-							console.log(new_points);
-							Challenges.update({ "_id" : challenge_id },{ $set: {"points": new_points} }, function(err, results) { if (err) res.send(err);});	
-						});
-					}
-				}
+							};
+						};
+					};
+				});
+
+				
 
 				// save the task
 				task.save(function(err) {
@@ -514,99 +566,29 @@ module.exports = function(app, express) {
 		// get the user with that id
 		.get(function(req, res) {
 			var user_id = req.decoded._id;
-			var data = [];
-			//Trouver les tâches où cet utilisateur est désigné comme ami
-			Tasks.find({"friend":user_id},{"validation":1,"description":1, "proprietary_challenge_id":1}, function(err,tasks){
-				//pour chacune des taches trouvées, aller chercher le challenge associé et ensuite le user associé au challenge afin de savoir qui m'a designé comme mentor
-				
-				/*for (var i = 0; i < tasks.length; i++) {
-					(function(i,tasks){
-						//on récupère les données de la tâche
-						var task_id = tasks[i]._id;
-						var description = tasks[i].description;
-						var validation = tasks[i].validation;
-
-						//on récupère le challenge associé
-						var challenge_id = tasks[i].proprietary_challenge_id;
-						
-						//on récupère le user associé
-						Challenges.findById(challenge_id,function(err,challenge){
-							
-							user_id=challenge.proprietary_user_id;
-							
-							//on récupère les infos du user (typiquement son nom plutot que son "id" !)
-							User.findById(user_id, function(err,user){
-								creator_name=user.name;
-								//on crée une nouvelle "ligne" contenant tous les objets
-								var obj = { 
-									        id: task_id,
-									        description : description,
-									        validation : validation,
-									        challenge: challenge_id,
-									        user_id: user_id,
-									        name: creator_name} ;
-
-								//on stock cette ligne dans l'objet data retourné à la fin
-								data.push(obj);
-								//console.log(data);
-								console.log(i);
-								if(i==tasks.length-1)res.json(data);
-							});
-
-						});	
-
-					})(i,tasks);
-				
-				
-					
-				};*/
-
-				async.forEachOf(tasks,function(proprietary_challenge_id,i){
-					//on récupère les données de la tâche
-					var task_id = tasks[i]._id;
-					var description = tasks[i].description;
-					var validation = tasks[i].validation;
-
-					//on récupère le challenge associé
-					var challenge_id = tasks[i].proprietary_challenge_id;
-					
-					//on récupère le user associé
-					Challenges.findById(challenge_id,function(err,challenge){
-						
-						user_id=challenge.proprietary_user_id;
-						
-						//on récupère les infos du user (typiquement son nom plutot que son "id" !)
-						User.findById(user_id, function(err,user){
-							creator_name=user.name;
-							//on crée une nouvelle "ligne" contenant tous les objets
-							var obj = { 
-								        id: task_id,
-								        description : description,
-								        validation : validation,
-								        challenge: challenge_id,
-								        user_id: user_id,
-								        name: creator_name} ;
-
-							//on stock cette ligne dans l'objet data retourné à la fin
-							data.push(obj);
-							//console.log(data);
-							console.log(i);
-							if(i==tasks.length-1)res.json(data);
-						});
-
-					});	
-
-				});
-				
-					
+			Tasks.find({"friend":user_id,$or:[{"validation":"val"},{"validation":"no_val"}]},function(err,tasks){
+				if(err) res.send(err);
+				res.json(tasks);
 			});
-
 
 				
 		});	
 				
 
-		
+	var get_participant = function(task,doneCallback){
+
+		var challenge_id = task.proprietary_challenge_id;
+
+		Challenges.findById(challenge_id,{"_id":0,"proprietary_user_id":1},function(err,cursor){
+			
+			cursor.toArray(doneCallback);
+			//on récupère les infos du user (typiquement son nom plutot que son "id" !)
+			
+
+		});	
+		return doneCallback(null);
+
+	}
 			
 		
 
