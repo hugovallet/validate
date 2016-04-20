@@ -147,7 +147,7 @@ module.exports = function(app, express) {
 			user.username = req.body.username;  // set the users username (comes from the request)
 			user.password = req.body.password;  // set the users password (comes from the request)
 			user.credit = 50; //POUR CETTE VERSION TEST, CHAQUE NOUVEL UTILISATEUR SE VOIT OFFRIR 50e A LA CREATION DU COMPTE
-			user.friend = req.body.friend; //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+			user.friends = req.body.friends; //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 			user.save(function(err) {
 				if (err) {
@@ -323,6 +323,8 @@ module.exports = function(app, express) {
 			task.proprietary_user_username = req.decoded.username;
 			task.validation = "no_val";
 
+
+
 			/*User.update({ "_id" : user_id },{ $set: {"friend": req.body.friend} }, function(err, results) {  //xxxxxxx MARCHE MAIS JE VOUDRAIS METTRE A LA SUITE TOUS LES AMIS
 			});*/
 			
@@ -392,7 +394,7 @@ module.exports = function(app, express) {
 					if(proprietary_user_id==user_id){
 
 						if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
-							//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
+							//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici
 							if(task_status=="no_val"){
 								Tasks.update({ "_id" : task_id },{ $set: {"validation": "val"} }, function(err, results) { if (err) res.send(err);});
 								//ensuite on met à jour le nombre de points en cours du challenge
@@ -430,7 +432,7 @@ module.exports = function(app, express) {
 					}
 					if(proprietary_user_id!=user_id){
 						if(!req.body.friend && !req.body.description) {                                //Cette condition est vérifiée quand l'utilisateur clique sur le bouton de validation d'une tache
-							//on met a jour le statut de la tâche en fonctioon du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici ici
+							//on met a jour le statut de la tâche en fonction du contexte. La double validation, en revanche est définitive et ne peut être modifiée c'est pourquoi task_status="double_val" n'est pas proposé ici
 							if(task_status=="no_val"){
 								Tasks.update({ "_id" : task_id },{ $set: {"validation": "double_val"} }, function(err, results) { if (err) res.send(err);});
 								//ensuite on met à jour le nombre de points en cours du challenge
@@ -515,6 +517,7 @@ module.exports = function(app, express) {
 				if (req.body.name) user.name = req.body.name;
 				if (req.body.username) user.username = req.body.username;
 				if (req.body.password) user.password = req.body.password;
+				if (req.body.friends) user.friends = req.body.friends;
 
 				// save the user
 				user.save(function(err) {
